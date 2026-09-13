@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Patron {
+public class Patron implements Observer {
     public int getPatronId() {
         return patronId;
     }
@@ -22,6 +22,10 @@ public class Patron {
     }
     public void addBorrowingHistory(BorrowingHistory history){
         borrowingHistoryList.add(history);
+    }
+    @Override
+    public void notifyChannel(String message) {
+        System.out.println(message);
     }
 
 

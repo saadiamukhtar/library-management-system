@@ -8,6 +8,12 @@ public class Library {
 
     List<Book> books= new ArrayList<>();
     List<Patron> members= new ArrayList<>();
+
+    private SearchStrategy searchStrategy;
+    private NotificationManager notificationManager;
+    public Library(NotificationManager notificationManager) {
+        this.notificationManager = notificationManager;
+    }
     public void addPatrons(Patron patron){
         members.add(patron);
     }
@@ -18,39 +24,17 @@ public class Library {
         books.remove(book);
 
     }
+    public List<Book> search(SearchStrategy strategy, String searchValue) {
+        return strategy.search(books, searchValue);
+    }
     public void updateBook(String ISBN, String newTitle, String newAuthor, int newPublicationYear) {
-
-        Book book = searchBookByISBN(ISBN);
+        searchStrategy= SearchStrategyFactory.create(SearchType.ISBN);
+        List<Book> result = search(searchStrategy, ISBN);
+        Book book = result.get(0);
 
         book.setTitle(newTitle);
         book.setAuthor(newAuthor);
         book.setPublicationYear(newPublicationYear);
-    }
-
-    public Book searchBookByTitle(String title) {
-        for (Book book : books) {
-            if (title.equalsIgnoreCase(book.getTitle())) {
-                return book;
-            }
-        }
-        throw new BookNotFoundException("No such book exists");
-    }
-    public List<Book> searchBookByAuthor(String author){
-        List<Book> booksByAuthor= new ArrayList<>();
-        for(Book book: books){
-            if(author.equalsIgnoreCase(book.getAuthor())){
-                booksByAuthor.add(book);
-            }
-        }
-        return booksByAuthor;
-    }
-    public Book searchBookByISBN(String ISBN){
-        for(Book book: books){
-            if(ISBN.equalsIgnoreCase(book.getISBN())){
-               return book;
-            }
-        }
-        throw new BookNotFoundException("NO such book exist");
     }
 
     public void checkOutBook(Book book, Patron patron) {
@@ -66,18 +50,6 @@ public class Library {
             book.borrow();
         }
     }
-//    public void returnBook(Book book, Patron patron){
-//        List<BorrowingHistory> borrowingList= patron.getBorrowingHistoryList();
-//        for(BorrowingHistory borrow: borrowingList){
-//            if(book.getISBN().equalsIgnoreCase(borrow.getBook().getISBN())){
-//                LocalDate returnedAt= LocalDate.now();
-//
-//            }
-//            book.available();
-//
-//        }
-//
-//    }
 public void returnBook(Book book, Patron patron) {
 
     for (BorrowingHistory history : patron.getBorrowingHistoryList()) {
@@ -86,6 +58,7 @@ public void returnBook(Book book, Patron patron) {
 
             history.markReturned(LocalDate.now());
             book.makeAvailable();
+            notificationManager.notifyObservers(book, book.getTitle()+ "is now Available. ");
 
             return;
         }
