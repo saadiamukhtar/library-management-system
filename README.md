@@ -1,6 +1,10 @@
 # Library Management System
 
 A Java-based Library Management System designed using Object-Oriented Programming principles, SOLID principles, and common Design Patterns.
+# Class Diagram
+<img width="6231" height="2263" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/c512cf83-948f-4340-9b93-0b67989659c9" />
+
+
 
 ## Features
 
