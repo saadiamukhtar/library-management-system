@@ -52,6 +52,7 @@ SearchStrategy
       |-- SearchByAuthor
       |-- SearchByISBN
 
+### 2. Factory Pattern
       SearchType
    |
    v
@@ -61,10 +62,16 @@ SearchStrategyFactory
    |-- AUTHOR -> SearchByAuthor
    |-- ISBN   -> SearchByISBN
 
-   Book
+   ### 3. Observer Pattern
   |
   v
+Book becomes AVAILABLE
+          |
+          v
 NotificationManager
-  |
-  +-- Patron
-  +-- Patron
+          |
+          v
+notifyObservers(book, message)
+          |
+          ├── Alice.notifyChannel(message)
+          └── Bob.notifyChannel(message)
